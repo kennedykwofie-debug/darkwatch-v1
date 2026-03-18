@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DARKWATCH - Threat Intelligence Platform</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<div class="top">
+  <div class="logo">&#9888; DARKWATCH</div>
+  <span class="live">&#9679; LIVE</span>
+  <span class="subt">Threat Intelligence Platform</span>
+  <nav class="nav">
+    <button class="nvb active" data-page="intel">Intel Feed</button>
+    <button class="nvb" data-page="assets">Asset Monitor</button>
+    <button class="nvb" data-page="creds">Credential Leaks</button>
+    <button class="nvb" data-page="alerts">Alerts <span id="alert-count" class="alert-dot" style="display:none">0</span></button>
+  </nav>
+  <span class="clk" id="ck">00:00:00 UTC</span>
+</div>
+
+<!-- INTEL FEED PAGE -->
+<div id="page-intel" class="page active">
+  <div class="fil">
+    <label>INDUSTRY</label>
+    <select id="fi"><option value="all">All Industries</option><option value="finance">Finance</option><option value="healthcare">Healthcare</option><option value="energy">Energy</option><option value="government">Government</option><option value="technology">Technology</option></select>
+    <label>REGION</label>
+    <select id="fr"><option value="all">All Regions</option><option value="na">North America</option><option value="eu">Europe</option><option value="apac">Asia Pacific</option><option value="latam">Latin America</option><option value="mena">Middle East</option></select>
+    <label>SEVERITY</label>
+    <select id="fs"><option value="all">All Severities</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select>
+    <button id="rfbtn" class="btn">&#8635; Refresh</button>
+  </div>
+  <div class="gr">
+    <div class="sb">
+      <h3>Sources</h3>
+      <div class="si"><span><span class="dot" style="background:#00d4aa"></span>All</span><span id="c0">-</span></div>
+      <div class="si"><span><span class="dot" style="background:#ff8c42"></span>OTX</span><span id="c1">-</span></div>
+      <div class="si"><span><span class="dot" style="background:#ff3b5c"></span>URLhaus</span><span id="c2">-</span></div>
+      <div class="si"><span><span class="dot" style="background:#ff3b5c"></span>Bazaar</span><span id="c3">-</span></div>
+      <div class="si"><span><span class="dot" style="background:#4d9eff"></span>ThreatFox</span><span id="c4">-</span></div>
+      <div class="si"><span><span class="dot" style="background:#a78bfa"></span>Feodo</span><span id="c5">-</span></div>
+      <div class="si"><span><span class="dot" style="background:#64748b"></span>Phishing</span><span id="c6">-</span></div>
+      <div style="margin-top:12px"><h3>Intel</h3></div>
+      <div class="si"><span><span class="dot" style="background:#00d4aa"></span>MITRE ATT&amp;CK</span><span id="c7">-</span></div>
+      <div class="si"><span><span class="dot" style="background:#00d4aa"></span>NVD/CISA</span><span id="c8">-</span></div>
+      <div style="margin-top:12px" id="fh"></div>
+    </div>
+    <div class="co">
+      <div class="st">
+        <div class="sc r"><div class="sl">Critical Threats</div><div class="sv" style="color:#ff3b5c" id="s0">-</div></div>
+        <div class="sc o"><div class="sl">Active IoCs</div><div class="sv" style="color:#ff8c42" id="s1">-</div></div>
+        <div class="sc a"><div class="sl">Threat Actors</div><div class="sv" style="color:#f5c518" id="s2">-</div></div>
+        <div class="sc b"><div class="sl">CVEs Exploited</div><div class="sv" style="color:#4d9eff" id="s3">-</div></div>
+        <div class="sc g"><div class="sl">Phishing</div><div class="sv" style="color:#00d4aa" id="s4">-</div></div>
+      </div>
+      <div class="pn">
+        <div class="ph">
+          <div class="pt">Intelligence Feed</div>
+          <div class="tabs">
+            <button class="tab on" data-tab="ta">All</button>
+            <button class="tab" data-tab="ti">IoCs</button>
+            <button class="tab" data-tab="tac">Actors</button>
+            <button class="tab" data-tab="tc">CVEs</button>
+            <button class="tab" data-tab="tp">Phishing</button>
+          </div>
+          <span id="fb" class="badge">LOADING</span>
+        </div>
+        <div class="tc on" id="ta"><div class="fl" id="fa"><div class="lt">Loading...</div></div></div>
+        <div class="tc" id="ti"><div class="scroll"><table><thead><tr><th>TYPE</th><th>VALUE</th><th>CONF</th><th>FIRST</th><th>SRC</th></tr></thead><tbody id="ib"></tbody></table></div></div>
+        <div class="tc" id="tac"><div class="ag" id="ag"></div></div>
+        <div class="tc" id="tc"><div class="scroll" id="cl"></div></div>
+        <div class="tc" id="tp"><div class="scroll" id="pl"></div></div>
+      </div>
+      <div class="two">
+        <div class="pn"><div class="ph"><div class="pt">By Region</div></div><div class="pb"><div class="bars" id="rb"></div></div></div>
+        <div class="pn"><div class="ph"><div class="pt">By Industry</div></div><div class="pb"><div class="bars" id="ib2"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ASSET MONITOR PAGE -->
+<div id="page-assets" class="page">
+  <div class="fil">
+    <span style="font-size:12px;color:#64748b">Monitor internet-facing assets and open ports for your organisation</span>
+    <div style="display:flex;gap:8px;margin-left:auto;align-items:center">
+      <input id="add-ip" class="inp" placeholder="IP address (e.g. 1.2.3.4)" style="width:180px">
+      <input id="add-domain" class="inp" placeholder="Domain (e.g. example.com)" style="width:180px">
+      <button id="add-asset-btn" class="btn btn-primary">+ Add to Watchlist</button>
+      <button id="scan-btn" class="btn">&#9654; Run Scan Now</button>
+    </div>
+  </div>
+  <div style="padding:16px">
+    <div class="st">
+      <div class="sc r"><div class="sl">Critical Assets</div><div class="sv" style="color:#ff3b5c" id="as-crit">-</div></div>
+      <div class="sc o"><div class="sl">High Risk</div><div class="sv" style="color:#ff8c42" id="as-high">-</div></div>
+      <div class="sc b"><div class="sl">Total Assets</div><div class="sv" style="color:#4d9eff" id="as-total">-</div></div>
+      <div class="sc a"><div class="sl">Open Ports</div><div class="sv" style="color:#f5c518" id="as-ports">-</div></div>
+      <div class="sc g"><div class="sl">Last Scan</div><div class="sv" style="color:#00d4aa;font-size:12px" id="as-scan">Never</div></div>
+    </div>
+    <div class="two" style="margin-bottom:12px">
+      <div class="pn">
+        <div class="ph"><div class="pt">Watched IPs</div></div>
+        <div style="padding:11px 13px" id="watched-ips"><div class="lt">No IPs watched yet</div></div>
+      </div>
+      <div class="pn">
+        <div class="ph"><div class="pt">Watched Domains</div></div>
+        <div style="padding:11px 13px" id="watched-domains"><div class="lt">No domains watched yet</div></div>
+      </div>
+    </div>
+    <div class="pn">
+      <div class="ph"><div class="pt">Internet-Facing Assets</div><span id="asset-badge" class="badge">LOADING</span></div>
+      <div class="scroll" style="max-height:420px;padding:0 13px">
+        <table id="asset-table">
+          <thead><tr><th>IP</th><th>HOSTNAME</th><th>PORT</th><th>SERVICE</th><th>COUNTRY</th><th>VULNS</th><th>RISK</th></tr></thead>
+          <tbody id="asset-tbody"><tr><td colspan="7" class="lt">Run a scan to discover assets</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CREDENTIAL LEAKS PAGE -->
+<div id="page-creds" class="page">
+  <div class="page-toolbar flat"><span class="tagline">Monitor credential leaks -- verify a domain for bulk scanning, or add individual emails below</span>
+    <div style="display:flex;gap:6px;align-items:center;margin-left:auto">
+      <input id="add-cred-email" class="inp" placeholder="individual@email.com" style="width:200px">
+      <button id="add-cred-btn" class="btn btn-primary">+ Monitor Email</button>
+      <button id="check-btn" class="btn">&#9654; Check All Now</button>
+    </div>
+  </div>
+  <div style="padding:12px 16px">
+    <div class="stat-row">
+      <div class="stat-card red"><div class="sl">Exposed Accounts</div><div class="sv" id="cr-accounts">0</div></div>
+      <div class="stat-card yellow"><div class="sl">Active Breaches</div><div class="sv" id="cr-breaches">0</div></div>
+      <div class="stat-card blue"><div class="sl">Monitored Emails</div><div class="sv" id="cr-domains" style="color:#f5c518">-</div></div>
+      <div class="stat-card blue2"><div class="sl">Critical Leaks</div><div class="sv" id="cr-critical">0</div></div>
+      <div class="stat-card green"><div class="sl">Last Check</div><div class="sv" id="cr-last" style="font-size:12px">Never</div></div>
+    </div>
+
+    <!-- Monitored Emails Panel -->
+    <div id="monitored-emails-panel" style="background:#0f1318;border:1px solid #1e2630;border-radius:6px;margin-bottom:12px;overflow:hidden">
+      <div style="padding:9px 13px;background:#161b22;border-bottom:1px solid #1e2630;display:flex;align-items:center;gap:8px">
+        <div class="pt">Monitored Emails</div>
+        <span id="mon-email-count" style="font-family:monospace;font-size:10px;color:#64748b;margin-left:auto">0 emails</span>
+      </div>
+      <div id="monitored-email-list" style="padding:10px 13px;min-height:38px">
+        <div style="color:#64748b;font-size:12px">No emails monitored yet -- add one above</div>
+      </div>
+    </div>
+
+    <!-- Domain Verification Wizard -->
+    
+    <!-- Bulk Import Panel -->
+    <div id="bulk-panel" style="background:#0d1117;border:1px solid #2a3440;border-radius:6px;margin-bottom:12px;overflow:hidden">
+      <div id="bulk-header" style="padding:10px 14px;background:#161b22;display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+        <div style="font-size:11px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:1px">+ Bulk Email Import</div>
+        <div id="bulk-toggle" style="font-size:10px;color:#64748b">Click to expand</div>
+      </div>
+      <div id="bulk-body" style="display:none;padding:14px">
+        <!-- Tab switcher -->
+        <div style="display:flex;gap:4px;margin-bottom:12px">
+          <button id="bulk-tab-pattern" class="btn btn-primary" style="font-size:11px">Auto-Generate Patterns</button>
+          <button id="bulk-tab-csv" class="btn" style="font-size:11px;background:#1e2630;border:1px solid #2a3440">CSV / Paste List</button>
+        </div>
+
+        <!-- Pattern generator -->
+        <div id="bulk-pane-pattern">
+          <div style="font-size:12px;color:#e2e8f0;margin-bottom:8px">Enter a domain to generate common corporate email addresses:</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+            <input id="bulk-domain" class="inp" placeholder="example.com" style="width:180px">
+            <button id="bulk-preview-btn" class="btn" style="font-size:11px;background:#1e2630;border:1px solid #a78bfa;color:#a78bfa">Preview</button>
+          </div>
+          <div id="bulk-preview-area" style="display:none;margin-bottom:10px">
+            <div style="font-size:10px;color:#64748b;margin-bottom:6px">Select which to add <span id="bulk-sel-count" style="color:#a78bfa"></span>:</div>
+            <div style="display:flex;gap:6px;margin-bottom:8px">
+              <button id="bulk-select-all" class="btn" style="font-size:10px;padding:2px 8px;background:#1e2630;border:1px solid #2a3440">Select All</button>
+              <button id="bulk-deselect-all" class="btn" style="font-size:10px;padding:2px 8px;background:#1e2630;border:1px solid #2a3440">Deselect All</button>
+            </div>
+            <div id="bulk-email-list" style="display:flex;flex-wrap:wrap;gap:6px;max-height:200px;overflow-y:auto;padding:8px;background:#161b22;border-radius:4px;border:1px solid #2a3440;margin-bottom:10px"></div>
+            <button id="bulk-add-selected" class="btn btn-primary" style="font-size:11px">Add Selected to Monitor</button>
+            <div id="bulk-add-status" style="font-size:11px;margin-top:6px;color:#64748b"></div>
+          </div>
+        </div>
+
+        <!-- CSV / Paste pane -->
+        <div id="bulk-pane-csv" style="display:none">
+          <div style="font-size:12px;color:#e2e8f0;margin-bottom:8px">Paste email addresses (one per line, or comma-separated) or drop a CSV file:</div>
+          <textarea id="bulk-paste" style="width:100%;height:120px;background:#161b22;border:1px solid #2a3440;border-radius:4px;padding:8px;color:#e2e8f0;font-family:monospace;font-size:11px;resize:vertical;outline:none" placeholder="user1@example.com&#10;user2@example.com&#10;user3@example.com"></textarea>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap">
+            <button id="bulk-csv-add" class="btn btn-primary" style="font-size:11px">Add All Emails</button>
+            <label style="font-size:11px;color:#64748b;cursor:pointer;display:flex;align-items:center;gap:4px">
+              <input id="bulk-file-input" type="file" accept=".csv,.txt" style="display:none">
+              <span style="border:1px solid #2a3440;background:#1e2630;padding:3px 8px;border-radius:4px;color:#e2e8f0">Upload .csv / .txt</span>
+            </label>
+          </div>
+          <div id="bulk-csv-status" style="font-size:11px;margin-top:6px;color:#64748b"></div>
+        </div>
+      </div>
+    </div>
+    <div id="dv-wizard" style="background:#0d1117;border:1px solid #2a3440;border-radius:6px;margin-bottom:12px;overflow:hidden">
+      <div id="dv-header" style="padding:10px 14px;background:#161b22;display:flex;justify-content:space-between;align-items:center;cursor:pointer">
+        <div style="font-size:11px;font-weight:700;color:#4d9eff;text-transform:uppercase;letter-spacing:1px">* Domain Verification -- Bulk Email Scanning</div>
+        <div id="dv-toggle-label" style="font-size:10px;color:#64748b">Click to expand</div>
+      </div>
+      <div id="dv-body" style="display:none;padding:14px">
+        <div id="dv-s1"><div style="font-size:12px;color:#e2e8f0;margin-bottom:10px">Verify domain ownership to scan <strong>all</strong> emails on your domain at once.</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><input id="dv-input" class="inp" placeholder="yourcompany.com" style="width:200px"><button id="dv-btn1" class="btn btn-primary" style="font-size:11px">Get DNS Verification Token</button></div><div style="font-size:10px;color:#64748b;margin-top:8px">First add your domain at <a href="https://haveibeenpwned.com/DomainSearch" target="_blank" rel="noopener" style="color:#4d9eff">haveibeenpwned.com/DomainSearch</a>, then request your token here.</div></div>
+        <div id="dv-s2" style="display:none"><div style="font-size:12px;color:#e2e8f0;margin-bottom:10px">Add this DNS TXT record to <strong id="dv-domname" style="color:#f5c518"></strong>:</div><div style="background:#161b22;border:1px solid #2a3440;border-radius:4px;padding:12px;margin-bottom:10px"><div style="font-size:10px;color:#64748b;margin-bottom:4px">Type: TXT | Name/Host: @ (root domain)</div><div style="font-size:10px;color:#64748b;margin-bottom:6px">Value (click to copy):</div><div id="dv-token" style="font-family:monospace;font-size:12px;color:#00d4aa;word-break:break-all;cursor:pointer;padding:6px;background:#0d1117;border-radius:3px;border:1px dashed #2a3440"></div><span id="dv-copymsg" style="display:none;font-size:10px;color:#00d4aa;margin-left:8px">Copied!</span></div><div style="font-size:11px;color:#64748b;margin-bottom:10px">DNS changes can take up to 24h. Click Check Status after adding the record.</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="dv-btn2" class="btn btn-primary" style="font-size:11px">Check Verification Status</button><button id="dv-back" class="btn" style="font-size:11px;background:#1e2630;border:1px solid #2a3440">Back</button></div><div id="dv-status" style="margin-top:8px;font-size:11px"></div></div>
+        <div id="dv-s3" style="display:none"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="color:#00d4aa;font-size:22px">&#10003;</span><div><div style="font-size:13px;color:#00d4aa;font-weight:700"><span id="dv-verified-name"></span> verified!</div><div style="font-size:11px;color:#64748b;margin-top:2px">Bulk scanning unlocked.</div></div></div><button id="dv-btn3" class="btn btn-primary">Scan All Emails on Domain Now</button><div id="dv-scan-result" style="margin-top:8px;font-size:11px"></div></div>
+      </div>
+    </div>
+
+    <!-- EXPOSED EMAIL ACCOUNTS TABLE - now above the fold -->
+    <div class="ph"><div class="pt">Exposed Email Accounts</div><span id="exposed-badge" class="badge red" style="display:none">0 EXPOSED</span></div>
+    <div style="margin-bottom:12px">
+      <table class="tbl"><thead><tr><th>Email</th><th>Count</th><th>Breach</th><th>Data Exposed</th><th>Risk</th></tr></thead><tbody id="exposed-emails"><tr><td colspan="5" class="lt">No breaches found for monitored emails</td></tr></tbody></table>
+    </div>
+
+    <!-- EMAIL BREACH SUMMARY - collapsible -->
+    <div style="background:#0f1318;border:1px solid #1e2630;border-radius:6px;margin-bottom:12px;overflow:hidden">
+      <div id="summary-header" style="padding:9px 13px;background:#161b22;border-bottom:1px solid #1e2630;display:flex;align-items:center;gap:8px;cursor:pointer">
+        <div class="pt">Email Breach Summary</div>
+        <div id="summary-toggle" style="font-size:10px;color:#64748b;margin-left:auto">Click to expand</div>
+      </div>
+      <div id="summary-body" style="display:none">
+        <div id="cred-summary" style="padding:12px 13px"><div style="color:#64748b;font-size:12px">Add any email above to check it against 700+ known breaches.<br><span style="color:#4d9eff">Powered by HaveIBeenPwned</span></div></div>
+      </div>
+    </div>
+
+    <!-- RECENT GLOBAL BREACHES - collapsible -->
+    <div style="background:#0f1318;border:1px solid #1e2630;border-radius:6px;overflow:hidden">
+      <div id="breaches-header" style="padding:9px 13px;background:#161b22;border-bottom:1px solid #1e2630;display:flex;align-items:center;gap:8px;cursor:pointer">
+        <div class="pt">Recent Global Breaches</div>
+        <div id="breaches-toggle" style="font-size:10px;color:#64748b;margin-left:auto">Click to expand</div>
+      </div>
+      <div id="breaches-body" style="display:none">
+        <div id="global-breaches" style="padding:0"><div class="lt">Loading...</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="page-alerts" class="page">
+  <div class="page-toolbar flat"><span class="tagline">Real-time alerts from continuous monitoring</span>
+    <button id="clear-alerts-btn" class="btn" style="margin-left:auto">Clear All</button>
+  </div>
+  <div style="padding:12px 16px">
+    <div class="ph"><div class="pt">Monitoring Alerts</div><span id="alerts-badge" class="badge red">0 ALERTS</span></div>
+    <div id="alerts-list"><div class="lt">No alerts yet. Monitoring runs every 6h automatically.</div></div>
+  </div>
+</div>
+
+<script src="/app.js" defer></script>
+</body>
+</html>
